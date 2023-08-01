@@ -1,0 +1,17 @@
+name: Trivy security scan
+run-name: Trivy
+on:
+  push:
+    branches: [ main ]
+jobs:
+  trivy-security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+    - name: trivy scan
+      run: |
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+        trivy image -f json -o trivy-report.json ghcr.io/terraform-linters/tflint
+        echo "printing trivy report"
+        cat trivy-report.json
